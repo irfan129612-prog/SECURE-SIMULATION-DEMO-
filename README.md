@@ -34,10 +34,7 @@ Confidentiality: HIGH
 ---
 
 STEP 2 — Encrypt Dataset (AES-256)
-openssl enc -aes-256-cbc -salt \
--in graphene_simulation_data.txt \
--out graphene_simulation_data.enc \
--pass stdin
+openssl enc -aes-256-cbc -salt -in graphene_simulation_data.txt -out graphene_simulation_data.enc -pass stdin
 Explanation
 AES-256 encryption ensures confidentiality
 Password is provided at runtime (no hardcoding)
