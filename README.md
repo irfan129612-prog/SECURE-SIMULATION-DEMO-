@@ -24,7 +24,7 @@ Dataset → Encryption → Vault Key Storage → Access Control → Docker Execu
 ```bash
 STEP 1 — Create Dataset
 nano graphene_simulation_data.txt
-📄 Sample Data
+Sample Data
 Material: Graphene Composite
 Density: 2.26 g/cm3
 Thermal Conductivity: 5000 W/mK
