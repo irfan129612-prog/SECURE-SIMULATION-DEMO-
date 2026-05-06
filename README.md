@@ -106,11 +106,7 @@ COPY graphene_simulation_data.enc .
 
 RUN mkdir -p /research/output
 
-CMD openssl enc -aes-256-cbc -d \
--in graphene_simulation_data.enc \
--out /research/output/simulation_output.txt \
--pass pass:$ENC_KEY
-
+CMD ["sh", "-c", "openssl enc -aes-256-cbc -d -in graphene_simulation_data.enc -out /research/output/decrypted.txt -pass pass:$VAULT_KEY"]
 ---
 
 
