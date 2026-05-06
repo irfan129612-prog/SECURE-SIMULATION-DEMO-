@@ -65,7 +65,7 @@ vault login
 
 STEP 4 — Store Encryption Key in Vault
 vault kv put secret/material_key key=$(openssl rand -base64 24)
-🔐 Explanation
+Explanation
 Random key generated dynamically
 Stored securely inside Vault
 
@@ -101,56 +101,35 @@ nano Dockerfile
 Add:
 FROM ubuntu:22.04
 
-RUN apt update && apt install -y python3 openssl
+RUN apt update && apt install -y openssl
 
 WORKDIR /research
 
 COPY graphene_simulation_data.enc .
-COPY simulate.py .
 
 RUN mkdir -p /research/output
 
-CMD ["python3", "simulate.py"]
+CMD openssl enc -aes-256-cbc -d \
+-in graphene_simulation_data.enc \
+-out /research/output/simulation_output.txt \
+-pass pass:$ENC_KEY
 
 ---
 
-STEP 8 — Simulation Script
-nano simulate.py
-Python Script
-import subprocess
-
-# Key fetched securely (no hardcoding in production)
-key = input("Enter decryption key: ")
-
-# Decrypt dataset
-subprocess.run([
-    "openssl", "enc", "-aes-256-cbc", "-d",
-    "-in", "graphene_simulation_data.enc",
-    "-out", "decrypted.txt",
-    "-pass", f"pass:{key}"
-])
-
-# Read decrypted data
-with open("decrypted.txt", "r") as f:
-    data = f.read()
-
-# Save secure output
-with open("/research/output/simulation_output.txt", "w") as f:
-    f.write("SECURE SIMULATION RESULT\n\n")
-    f.write(data)
-
-print("✔ Simulation completed securely.")
 
 ----
 
-STEP 9 — Build Docker Image
+STEP 8 — Build Docker Image
 docker build -t secure-materials .
 
 ----
 
+STEP 9 — fetch key from VAULT securely
+export VAULT_KEY=$(vault kv get -field=key secret/material_key)
+# explaination: this command will fetch key securely
 STEP 10 — Run Container (Persistent Output)
-docker run -v $(pwd)/output:/research/output secure-materials
-
+docker run -e ENC_KEY=$VAULT_KEY -v $(pwd)/output:/research/output secure-materials
+-e ENC_KEY → sends key inside the container
 Output Generated
 output/simulation_output.txt
 
@@ -160,7 +139,7 @@ secure-material-simulation/
 │
 ├── graphene_simulation_data.txt
 ├── graphene_simulation_data.enc
-├── simulate.py
+├── Secret Management (HashiCorp Vault)
 ├── Dockerfile
 ├── policy.hcl
 └── output/
