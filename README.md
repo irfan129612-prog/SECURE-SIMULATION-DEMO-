@@ -45,6 +45,15 @@ Password is provided at runtime (no hardcoding)
 ----
 
 STEP 3 — Start Vault (Key Management)
+Download Vault. 
+wget https://releases.hashicorp.com/vault/1.15.2/vault_1.15.2_linux_amd64.zip 
+Install unzip. 
+sudo apt install unzip 
+Unzip: 
+unzip vault_1.15.2_linux_amd64.zip 
+Move binary: 
+sudo mv vault /usr/local/bin/
+Start Vault
 vault server -dev
 
 New terminal:
